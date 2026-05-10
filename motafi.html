@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motafi — The Beautiful Language</title>
+<meta name="description" content="Explore Motafi (mota + fi = beautiful language) — a constructed language with SVO syntax, elegant phonology, and rich grammar.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌏</text></svg>">
+<style>
+/* ═══════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background: #fafafa; color: #1a1a1a; line-height: 1.6; overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ═══════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(250,250,250,0.85); backdrop-filter: blur(12px);
+  border-bottom: 1px solid #e5e5e5; height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; max-width: 1200px; margin: 0 auto;
+}
+.nav-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.15rem; cursor: pointer; }
+.nav-logo-icon {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800;
+}
+.nav-logo-text { background: linear-gradient(135deg, #d97706, #ea580c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.nav-links { display: flex; gap: 4px; }
+.nav-link {
+  padding: 6px 14px; border-radius: 8px; font-size: 0.875rem; font-weight: 500;
+  color: #737373; cursor: pointer; transition: all 0.2s; border: none; background: none;
+}
+.nav-link:hover { color: #1a1a1a; background: #f0f0f0; }
+.nav-link.active { color: #b45309; background: #fef3c7; }
+.nav-hamburger { display: none; background: none; border: none; padding: 8px; cursor: pointer; border-radius: 8px; }
+.nav-hamburger:hover { background: #f0f0f0; }
+.nav-mobile {
+  display: none; position: fixed; top: 56px; left: 0; right: 0; z-index: 99;
+  background: rgba(250,250,250,0.97); backdrop-filter: blur(12px);
+  border-bottom: 1px solid #e5e5e5; padding: 8px;
+}
+.nav-mobile.open { display: block; }
+.nav-mobile button {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 12px 16px; border: none; background: none; font-size: 0.9rem;
+  color: #525252; cursor: pointer; border-radius: 8px; font-weight: 500; text-align: left;
+}
+.nav-mobile button:hover { background: #f5f5f5; }
+.nav-mobile button.active { background: #fef3c7; color: #b45309; }
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-hamburger { display: block; }
+}
+
+/* ═══════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════ */
+.section { padding: 80px 20px; max-width: 1200px; margin: 0 auto; }
+.section-divider { border: none; border-top: 1px solid #e5e5e5; max-width: 1200px; margin: 0 auto; }
+
+/* ═══════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════ */
+.hero {
+  min-height: 90vh; display: flex; align-items: center; justify-content: center;
+  text-align: center; position: relative; padding: 80px 20px 40px; overflow: hidden;
+}
+.hero-blob {
+  position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; opacity: 0.3;
+}
+.hero-blob-1 { width: 400px; height: 400px; background: #fbbf24; top: -50px; left: -100px; }
+.hero-blob-2 { width: 500px; height: 500px; background: #fb923c; bottom: -100px; right: -150px; }
+.hero-blob-3 { width: 600px; height: 600px; background: #fed7aa; top: 50%; left: 50%; transform: translate(-50%,-50%); opacity: 0.15; }
+.hero-content { position: relative; z-index: 1; max-width: 700px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 16px; border-radius: 999px; background: #fef3c7;
+  color: #92400e; font-size: 0.875rem; font-weight: 500; margin-bottom: 28px;
+}
+.hero-title {
+  font-size: clamp(3.5rem, 10vw, 7rem); font-weight: 800; letter-spacing: -2px;
+  background: linear-gradient(135deg, #d97706, #ea580c, #dc2626);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 16px;
+}
+.hero-subtitle { font-size: 1.15rem; color: #737373; margin-bottom: 8px; }
+.hero-mota { font-family: 'Courier New', monospace; font-size: 0.9rem; background: #f0f0f0; padding: 2px 8px; border-radius: 4px; }
+.hero-desc { font-size: 1.05rem; color: #737373; margin-bottom: 36px; max-width: 560px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+.hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn {
+  padding: 12px 28px; border-radius: 12px; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; border: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #f59e0b, #ea580c); color: #fff;
+  box-shadow: 0 4px 20px rgba(245,158,11,0.25);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(245,158,11,0.35); }
+.btn-outline { background: #fff; border: 1px solid #d4d4d4; color: #1a1a1a; }
+.btn-outline:hover { background: #f5f5f5; }
+.hero-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  margin-top: 56px; max-width: 500px; margin-left: auto; margin-right: auto;
+}
+.hero-stat {
+  padding: 16px 12px; border-radius: 12px; background: #fff;
+  border: 1px solid #e5e5e5; text-align: center;
+}
+.hero-stat-icon { color: #f59e0b; margin-bottom: 4px; }
+.hero-stat-val { font-size: 1.5rem; font-weight: 700; }
+.hero-stat-label { font-size: 0.7rem; color: #a3a3a3; text-transform: uppercase; letter-spacing: 0.5px; }
+@media (max-width: 480px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
+
+/* ═══════════════════════════════════════════
+   SECTION HEADERS
+   ═══════════════════════════════════════════ */
+.section-head { margin-bottom: 32px; }
+.section-head-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.section-head-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 15px rgba(245,158,11,0.2);
+}
+.section-head-title { font-size: 1.85rem; font-weight: 700; }
+.section-head-sub { color: #737373; font-size: 1.05rem; margin-left: 56px; }
+
+/* ═══════════════════════════════════════════
+   CARDS
+   ═══════════════════════════════════════════ */
+.card {
+  background: #fff; border-radius: 16px; border: 1px solid #e5e5e5;
+  padding: 24px; margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+.card-desc { font-size: 0.875rem; color: #737373; margin-bottom: 16px; }
+.card-title-badge {
+  width: 32px; height: 32px; border-radius: 8px; display: flex;
+  align-items: center; justify-content: center; font-weight: 700;
+  font-size: 0.8rem; flex-shrink: 0;
+}
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+@media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+@media (max-width: 768px) { .grid-3, .grid-4, .grid-5 { grid-template-columns: repeat(2, 1fr); } .grid-6 { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 480px) { .grid-3, .grid-4, .grid-5, .grid-6 { grid-template-columns: 1fr 1fr; } }
+
+/* ═══════════════════════════════════════════
+   BADGES
+   ═══════════════════════════════════════════ */
+.badge {
+  display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 6px;
+  font-size: 0.75rem; font-weight: 600; border: 1px solid transparent;
+}
+.badge-noun { background: #fef3c7; color: #92400e; }
+.badge-verb { background: #d1fae5; color: #065f46; }
+.badge-adj { background: #ede9fe; color: #5b21b6; }
+.badge-prep { background: #e0f2fe; color: #075985; }
+.badge-particle { background: #ffe4e6; color: #9f1239; }
+.badge-pronoun { background: #ccfbf1; color: #115e59; }
+.badge-conj { background: #ffedd5; color: #9a3412; }
+.badge-default { background: #f0f0f0; color: #525252; border: 1px solid #e5e5e5; }
+
+/* ═══════════════════════════════════════════
+   INTERACTIVE ELEMENTS
+   ═══════════════════════════════════════════ */
+/* Word hover tooltip */
+.word-hover {
+  position: relative; display: inline; padding: 1px 4px; margin: 0 1px;
+  border-radius: 4px; cursor: help; transition: background 0.15s;
+  border: 1px solid transparent;
+}
+.word-hover:hover { background: #fef3c7; border-color: #fcd34d; }
+.word-tip {
+  display: none; position: absolute; bottom: calc(100% + 8px); left: 50%;
+  transform: translateX(-50%); background: #1a1a1a; color: #fff;
+  padding: 8px 14px; border-radius: 10px; font-size: 0.8rem; white-space: nowrap;
+  z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,0.15); text-align: center;
+  pointer-events: none;
+}
+.word-tip::after {
+  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 6px solid transparent; border-top-color: #1a1a1a;
+}
+.word-hover:hover .word-tip { display: block; }
+
+/* Annotated text line */
+.annotated-text { font-size: 1.1rem; line-height: 2; font-weight: 500; letter-spacing: 0.3px; }
+
+/* ═══════════════════════════════════════════
+   VOCABULARY
+   ═══════════════════════════════════════════ */
+.search-box { position: relative; max-width: 400px; margin-bottom: 16px; }
+.search-box input {
+  width: 100%; padding: 10px 12px 10px 38px; border: 1px solid #d4d4d4;
+  border-radius: 10px; font-size: 0.9rem; outline: none; background: #fff;
+  transition: border-color 0.2s;
+}
+.search-box input:focus { border-color: #f59e0b; }
+.search-box .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #a3a3a3; }
+.filter-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.filter-btn {
+  padding: 4px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 500;
+  cursor: pointer; border: 1px solid #e5e5e5; background: #fff; color: #525252;
+  transition: all 0.15s;
+}
+.filter-btn:hover { background: #f5f5f5; }
+.filter-btn.active { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+.vocab-count { font-size: 0.85rem; color: #a3a3a3; margin-bottom: 12px; }
+.vocab-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; border: 1px solid #e5e5e5; border-radius: 12px;
+  background: #fff; transition: all 0.15s;
+}
+.vocab-item:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.vocab-word { font-family: 'Courier New', monospace; font-weight: 700; font-size: 0.95rem; }
+.vocab-eng { font-size: 0.85rem; color: #737373; }
+.vocab-cat { font-size: 0.7rem; color: #a3a3a3; }
+.copy-btn {
+  opacity: 0; background: none; border: none; cursor: pointer; padding: 6px;
+  border-radius: 6px; transition: all 0.15s; color: #a3a3a3;
+}
+.vocab-item:hover .copy-btn { opacity: 1; }
+.copy-btn:hover { background: #f0f0f0; color: #1a1a1a; }
+
+/* ═══════════════════════════════════════════
+   INFO BOXES
+   ═══════════════════════════════════════════ */
+.info-box { padding: 14px 18px; border-radius: 12px; border: 1px solid; margin-bottom: 16px; font-size: 0.875rem; }
+.info-box-amber { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+.info-box-blue { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+.info-box-cyan { background: #ecfeff; border-color: #a5f3fc; color: #155e75; }
+.info-box-rose { background: #fff1f2; border-color: #fecdd3; color: #9f1239; }
+.info-box-green { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+.info-box-teal { background: #f0fdfa; border-color: #99f6e4; color: #115e59; }
+
+/* ═══════════════════════════════════════════
+   EXAMPLE ITEMS
+   ═══════════════════════════════════════════ */
+.example-item {
+  display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px;
+  border-radius: 10px; transition: background 0.15s;
+}
+.example-item:hover { background: #fafafa; }
+.example-dot { width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #ea580c); flex-shrink: 0; margin-top: 6px; }
+.example-mota { font-family: 'Courier New', monospace; font-weight: 600; font-size: 0.9rem; }
+.example-eng { font-size: 0.825rem; color: #737373; margin-top: 2px; }
+
+/* ═══════════════════════════════════════════
+   SONG
+   ═══════════════════════════════════════════ */
+.song-header {
+  background: linear-gradient(135deg, #0ea5e9, #2563eb); color: #fff;
+  padding: 24px; border-radius: 16px 16px 0 0; margin-bottom: 0;
+  border: 1px solid #0ea5e9; border-bottom: none;
+}
+.song-header-title { font-size: 1.3rem; font-weight: 700; }
+.song-header-sub { font-size: 0.9rem; color: #bae6fd; }
+.song-body { padding: 24px; border: 1px solid #e5e5e5; border-top: none; border-radius: 0 0 16px 16px; background: #fff; }
+.stanza-box { padding: 16px; border-radius: 12px; border: 1px solid #e5e5e5; margin-bottom: 16px; font-family: 'Courier New', monospace; font-size: 0.88rem; line-height: 1.8; background: #f0f9ff; border-color: #bae6fd; white-space: pre-line; }
+.stanza-eng { padding: 16px; border-radius: 12px; background: #fafafa; border: 1px solid #e5e5e5; font-style: italic; font-size: 0.88rem; line-height: 1.8; color: #737373; white-space: pre-line; }
+.stanza-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+@media (max-width: 768px) { .stanza-grid { grid-template-columns: 1fr; } }
+
+/* ═══════════════════════════════════════════
+   WORD GRID (phonology, etc.)
+   ═══════════════════════════════════════════ */
+.vowel-card {
+  padding: 20px; border-radius: 14px; text-align: center;
+  background: linear-gradient(135deg, #fffbeb, #fff7ed); border: 1px solid #fde68a;
+  transition: transform 0.15s;
+}
+.vowel-card:hover { transform: scale(1.03); }
+.vowel-letter { font-size: 2.5rem; font-weight: 800; color: #d97706; }
+.vowel-pron { font-size: 0.8rem; color: #737373; font-style: italic; }
+.consonant-chip {
+  width: 40px; height: 40px; border-radius: 8px; display: flex;
+  align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;
+  background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0;
+  transition: transform 0.15s; cursor: default;
+}
+.consonant-chip:hover { transform: scale(1.15) translateY(-2px); }
+.special-sound {
+  padding: 12px; border-radius: 10px; border: 1px solid #e5e5e5;
+  transition: all 0.15s;
+}
+.special-sound:hover { border-color: #c4b5fd; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.special-digraph { font-family: 'Courier New', monospace; font-weight: 700; color: #7c3aed; font-size: 1rem; }
+.special-desc { font-size: 0.82rem; color: #737373; margin-top: 4px; }
+.mini-item {
+  padding: 10px 14px; border-radius: 10px; border: 1px solid #e5e5e5;
+  text-align: center; transition: box-shadow 0.15s;
+}
+.mini-item:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.mini-label { font-family: 'Courier New', monospace; font-weight: 700; }
+.mini-val { font-size: 0.82rem; color: #737373; }
+.day-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 8px; border: 1px solid #e5e5e5; margin-bottom: 4px; }
+.day-row.base { background: #f0fdf4; border-color: #bbf7d0; font-weight: 700; }
+.day-mota { font-family: 'Courier New', monospace; font-weight: 600; }
+.day-eng { font-size: 0.85rem; color: #737373; }
+.rule-item { display: flex; align-items: flex-start; gap: 8px; font-size: 0.9rem; margin-bottom: 6px; }
+.rule-arrow { color: #f59e0b; flex-shrink: 0; margin-top: 2px; }
+.svo-badge { display: inline-flex; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 1rem; color: #fff; }
+.svo-s { background: #3b82f6; } . svo-v { background: #16a34a; } . svo-o { background: #f59e0b; }
+.svo-arrow { color: #a3a3a3; font-size: 1.2rem; }
+
+/* ═══════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════ */
+.footer {
+  padding: 48px 20px; border-top: 1px solid #e5e5e5; text-align: center;
+  background: #fafafa;
+}
+.footer-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; }
+.footer-desc { font-size: 0.85rem; color: #a3a3a3; max-width: 420px; margin: 0 auto 12px; }
+.footer-mono { font-family: 'Courier New', monospace; }
+.footer-stats { display: flex; justify-content: center; gap: 16px; font-size: 0.75rem; color: #a3a3a3; }
+
+/* ═══════════════════════════════════════════
+   SCROLL TO TOP
+   ═══════════════════════════════════════════ */
+.scroll-top {
+  position: fixed; bottom: 24px; right: 24px; z-index: 90;
+  width: 44px; height: 44px; border-radius: 50%; border: none;
+  background: linear-gradient(135deg, #f59e0b, #ea580c); color: #fff;
+  cursor: pointer; box-shadow: 0 4px 15px rgba(245,158,11,0.3);
+  display: none; align-items: center; justify-content: center;
+  transition: transform 0.2s;
+}
+.scroll-top:hover { transform: translateY(-2px); }
+.scroll-top.visible { display: flex; }
+
+/* ═══════════════════════════════════════════
+   SVO display box
+   ═══════════════════════════════════════════ */
+.svo-box {
+  display: flex; align-items: center; gap: 16px; padding: 18px 24px;
+  border-radius: 14px; background: #eff6ff; border: 1px solid #bfdbfe;
+}
+
+/* er/ero particle boxes */
+.particle-box { padding: 14px 18px; border-radius: 12px; border: 1px solid; }
+.particle-box-blue { background: #eff6ff; border-color: #bfdbfe; }
+.particle-box-purple { background: #f5f3ff; border-color: #c4b5fd; }
+
+/* ═══════════════════════════════════════════
+   MISC
+   ═══════════════════════════════════════════ */
+.text-muted { color: #737373; }
+.text-xs { font-size: 0.75rem; }
+.text-sm { font-size: 0.875rem; }
+.mono { font-family: 'Courier New', monospace; }
+.fw-bold { font-weight: 700; }
+.mt-4 { margin-top: 16px; }
+.mb-4 { margin-bottom: 16px; }
+.mb-6 { margin-bottom: 24px; }
+.gap-3 { gap: 12px; }
+.flex-wrap { flex-wrap: wrap; }
+.separator { border: none; border-top: 1px solid #e5e5e5; margin: 24px 0; }
+.word-ref-grid { max-height: 280px; overflow-y: auto; }
+.word-ref-row { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; }
+.word-ref-row:hover { background: #fafafa; }
+.word-ref-mota { font-family: 'Courier New', monospace; font-weight: 700; color: #0369a1; flex-shrink: 0; }
+.word-ref-arrow { color: #a3a3a3; flex-shrink: 0; }
+.word-ref-eng { color: #737373; }
+.word-ref-grammar { color: #d4d4d4; margin-left: auto; font-size: 0.7rem; flex-shrink: 0; }
+
+.empty-state { text-align: center; padding: 48px 20px; color: #a3a3a3; }
+.empty-state svg { margin: 0 auto 12px; opacity: 0.3; }
+
+/* Song reference header */
+.ref-header { display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 12px; font-size: 0.95rem; }
+.ref-header svg { color: #f59e0b; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     NAVIGATION
+     ═══════════════════════════════════════════ -->
+<nav class="nav">
+  <div class="nav-logo" onclick="scrollTo_('home')">
+    <div class="nav-logo-icon">M</div>
+    <span class="nav-logo-text">Motafi</span>
+  </div>
+  <div class="nav-links" id="navLinks">
+    <button class="nav-link active" data-section="home">Home</button>
+    <button class="nav-link" data-section="phonology">Phonology</button>
+    <button class="nav-link" data-section="grammar">Grammar</button>
+    <button class="nav-link" data-section="vocabulary">Vocabulary</button>
+    <button class="nav-link" data-section="examples">Examples</button>
+    <button class="nav-link" data-section="song">Song</button>
+  </div>
+  <button class="nav-hamburger" id="hamburgerBtn" aria-label="Menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</nav>
+<div class="nav-mobile" id="mobileNav">
+  <button data-section="home" onclick="scrollTo_('home')">&#127758; Home</button>
+  <button data-section="phonology" onclick="scrollTo_('phonology')">&#128266; Phonology</button>
+  <button data-section="grammar" onclick="scrollTo_('grammar')">&#127891; Grammar</button>
+  <button data-section="vocabulary" onclick="scrollTo_('vocabulary')">&#128214; Vocabulary</button>
+  <button data-section="examples" onclick="scrollTo_('examples')">&#9999; Examples</button>
+  <button data-section="song" onclick="scrollTo_('song')">&#127925; Song</button>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-blob hero-blob-1"></div>
+  <div class="hero-blob hero-blob-2"></div>
+  <div class="hero-blob hero-blob-3"></div>
+  <div class="hero-content">
+    <div class="hero-badge">&#10024; A Constructed Language</div>
+    <h1 class="hero-title">Motafi</h1>
+    <p class="hero-subtitle">
+      <span class="hero-mota">mota</span> + <span class="hero-mota">fi</span> =
+      <strong>language</strong> + <strong>beautiful</strong>
+    </p>
+    <p class="hero-desc">
+      An elegant constructed language with SVO syntax, a harmonious CV-CV-CV rhythm,
+      rich grammar including active/passive voice particles, event constructions, and beautiful phonology.
+    </p>
+    <div class="hero-buttons">
+      <button class="btn btn-primary" onclick="scrollTo_('phonology')">Start Exploring &#8594;</button>
+      <button class="btn btn-outline" onclick="scrollTo_('vocabulary')">&#128214; Vocabulary</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-icon">&#128214;</div><div class="hero-stat-val">140+</div><div class="hero-stat-label">Vocabulary</div></div>
+      <div class="hero-stat"><div class="hero-stat-icon">&#9999;</div><div class="hero-stat-val">SVO</div><div class="hero-stat-label">Word Order</div></div>
+      <div class="hero-stat"><div class="hero-stat-icon">&#128266;</div><div class="hero-stat-val">4</div><div class="hero-stat-label">Vowels</div></div>
+      <div class="hero-stat"><div class="hero-stat-icon">&#128172;</div><div class="hero-stat-val" id="verbCount">0</div><div class="hero-stat-label">Verbs</div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ═══════════════════════════════════════════
+     PHONOLOGY
+     ═══════════════════════════════════════════ -->
+<section class="section" id="phonology">
+  <div class="section-head">
+    <div class="section-head-row">
+      <div class="section-head-icon">&#128266;</div>
+      <h2 class="section-head-title">Phonology</h2>
+    </div>
+    <p class="section-head-sub">The sounds of Motafi — vowels, consonants, and special sound combinations</p>
+  </div>
+
+  <div class="grid-2 mb-6">
+    <!-- Vowels -->
+    <div class="card" style="border-color: #fde68a;">
+      <div class="card-title">
+        <div class="card-title-badge" style="background:#fef3c7;color:#d97706;">A</div>
+        Vowels
+      </div>
+      <div class="card-desc">4 vowels — always pronounced, fixed sounds</div>
+      <div class="grid-4" id="vowelGrid"></div>
+    </div>
+    <!-- Consonants -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-badge" style="background:#d1fae5;color:#065f46;">B</div>
+        Consonants
+      </div>
+      <div class="card-desc">21 consonant letters in the Motafi alphabet</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;" id="consonantGrid"></div>
+    </div>
+  </div>
+
+  <!-- Special Sounds -->
+  <div class="card mb-6">
+    <div class="card-title">
+      <div class="card-title-badge" style="background:#ede9fe;color:#7c3aed;">Sh</div>
+      Special Sound Combinations
+    </div>
+    <div class="card-desc">Digraphs and special pronunciation rules</div>
+    <div class="grid-3" id="specialSoundsGrid"></div>
+  </div>
+
+  <!-- Rules -->
+  <div class="card">
+    <div class="card-title">&#128161; Phonology Rules</div>
+    <div id="phonologyRules"></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ═══════════════════════════════════════════
+     GRAMMAR
+     ═══════════════════════════════════════════ -->
+<section class="section" id="grammar">
+  <div class="section-head">
+    <div class="section-head-row">
+      <div class="section-head-icon">&#127891;</div>
+      <h2 class="section-head-title">Grammar</h2>
+    </div>
+    <p class="section-head-sub">A comprehensive guide to Motafi grammar — syntax, morphology, and more</p>
+  </div>
+
+  <!-- 1. Syntax -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-badge" style="background:#dbeafe;color:#2563eb;">1</div>
+      Syntax — Word Order
+    </div>
+    <div class="svo-box mb-4">
+      <span class="svo-badge svo-s">S</span>
+      <span class="svo-arrow">&#8594;</span>
+      <span class="svo-badge svo-v">V</span>
+      <span class="svo-arrow">&#8594;</span>
+      <span class="svo-badge svo-o">O</span>
+      <span class="text-muted" style="margin-left:8px;">Subject &#8594; Verb &#8594; Object</span>
+    </div>
+    <div class="grid-2" id="syntaxExamples"></div>
+  </div>
+
+  <!-- 2. Pronouns -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-badge" style="background:#ccfbf1;color:#0d9488;">2</div>
+      Pronouns
+    </div>
+    <div class="grid-2" id="pronounsGrid">
+      <div>
+        <h4 style="font-weight:600;margin-bottom:10px;color:#0d9488;">Personal Pronouns</h4>
+        <div class="grid-2" id="personalPronouns"></div>
+      </div>
+      <div>
+        <h4 style="font-weight:600;margin-bottom:10px;color:#0d9488;">Demonstrative Pronouns</h4>
+        <div class="grid-2" id="demoPronouns"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Tense & Negation -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-badge" style="background:#ffe4e6;color:#e11d48;">3</div>
+      Tense Particles & Negation
+    </div>
+    <div class="grid-4 mb-4" id="tenseGrid"></div>
+    <hr class="separator">
+    <h4 style="font-weight:600;margin-bottom:10px;">Negation</h4>
+    <div class="info-box info-box-rose mb-4">&#8505;&#65039; Use <strong>"na"</strong> after the tense particle. If no tense particle, insert <strong>"pe"</strong> before <strong>"na"</strong>.</div>
+    <div class="grid-3 mb-4" id="negationGrid"></div>
+    <hr class="separator">
+    <div class="grid-2">
+      <div>
+        <h4 style="font-weight:600;margin-bottom:10px;">Verb Aspect Suffixes</h4>
+        <div id="aspectGrid"></div>
+      </div>
+      <div>
+        <h4 style="font-weight:600;margin-bottom:10px;">Yes / No</h4>
+        <div class="grid-2 mb-4">
+          <div style="padding:16px;border-radius:12px;background:#f0fdf4;border:1px solid #bbf7d0;text-align:center;">
+            <div style="font-size:1.3rem;color:#16a34a;">&#9989;</div>
+            <div class="mono fw-bold" style="font-size:1.2rem;color:#16a34a;">ua</div>
+            <div class="text-xs text-muted">yes</div>
+          </div>
+          <div style="padding:16px;border-radius:12px;background:#fef2f2;border:1px solid #fecaca;text-align:center;">
+            <div style="font-size:1.3rem;color:#dc2626;">&#9888;&#65039;</div>
+            <div class="mono fw-bold" style="font-size:1.2rem;color:#dc2626;">na</div>
+            <div class="text-xs text-muted">no</div>
+          </div>
+        </div>
+        <h4 style="font-weight:600;margin-bottom:10px;">Possession (ka)</h4>
+        <div id="possessionGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Active/Passive -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-badge" style="background:#f3e8ff;color:#9333ea;">4</div>
+      Active / Passive Voice (er / ero)
+    </div>
+    <div class="grid-2 mb-4">
+      <div class="particle-box particle-box-blue"><strong class="badge badge-default" style="background:#dbeafe;color:#1d4ed8;">er</strong><div class="text-sm mt-4">Placed before a noun to mark it as the <strong>SUBJECT</strong> (doer)</div></div>
+      <div class="particle-box particle-box-purple"><strong class="badge badge-default" style="background:#ede9fe;color:#7c3aed;">ero</strong><div class="text-sm mt-4">Placed before a noun to mark it as the <strong>OBJECT</strong> (receiver)</div></div>
+    </div>
+    <div class="info-box info-box-amber mb-4">&#128161; er and ero allow flexible word order (SVO, VSO, VOS, etc.). You can use both, one, or drop them entirely when context is clear.</div>
+    <div class="grid-2" id="activePassiveGrid"></div>
+  </div>
+
+  <!-- 5. Infinitive -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-badge" style="background:#e0e7ff;color:#4338ca;">5</div>
+      Infinitive Prefix (ge-) & Event Construction
+    </div>
+    <p class="text-sm text-muted mb-4">Add <span class="mono fw-bold">ge-</span> before any verb to create its infinitive form.</p>
+    <div class="grid-4 mb-4" id="infinitiveGrid"></div>
+    <hr class="separator">
+    <h4 style="font-weight:600;margin-bottom:10px;">Event Construction: [ge-verb + object] + sire</h4>
+    <div class="grid-2" id="eventGrid"></div>
+  </div>
+
+  <!-- 6. Plural & Intensification -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-badge" style="background:#fff7ed;color:#ea580c;">6</div>
+      Plural & Intensification
+    </div>
+    <p class="text-sm text-muted mb-4">Write a word twice, hyphen-separated, to make it plural. For adjectives/adverbs, this means an extreme degree.</p>
+    <div class="grid-2" id="pluralGrid"></div>
+  </div>
+
+  <!-- 7. Articles -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-badge" style="background:#fce7f3;color:#db2777;">7</div>
+      Articles
+    </div>
+    <div class="card-desc">Optional articles used for flow, stress, and reference tracking</div>
+    <div id="articlesGrid"></div>
+  </div>
+
+  <!-- 8. Questions -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-badge" style="background:#ecfeff;color:#0891b2;">8</div>
+      Questions & Interrogatives
+    </div>
+    <div class="info-box info-box-cyan mb-4">Use <strong>"ma"</strong> at the end of a sentence to mark it as a question. Question marks are used both before and at the end, like Spanish: &#191;...?</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;" id="interrogativesRow"></div>
+    <div class="grid-2" id="questionExamples"></div>
+  </div>
+
+  <!-- 9. Conjunctions -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-badge" style="background:#ffedd5;color:#ea580c;">9</div>
+      Conjunctions
+    </div>
+    <div class="grid-5" id="conjunctionsGrid"></div>
+  </div>
+
+  <!-- 10. Numbers -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-badge" style="background:#e0e7ff;color:#4338ca;">&#35;</div>
+      Counting System
+    </div>
+    <div class="card-desc">Two-digit numbers: n + sif + m (e.g., 11 = ik + sif + ik = ikisik). Hundreds = sida, Thousands = toze, 10&#8308; = idatoza, 10&#8309; = sidatoza, 10&#8310; = kaho.</div>
+    <h4 style="font-weight:600;margin-bottom:10px;">Basic Digits</h4>
+    <div class="grid-6 mb-4" id="digitsGrid"></div>
+    <h4 style="font-weight:600;margin-bottom:10px;">Large Numbers</h4>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;" id="largeNumsRow"></div>
+    <h4 style="font-weight:600;margin-bottom:10px;">Examples</h4>
+    <div class="grid-4" id="numExamples"></div>
+  </div>
+
+  <!-- Days & Months -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-badge" style="background:#dcfce7;color:#16a34a;">&#128197;</div>
+      Days, Months & Dates
+    </div>
+    <div class="card-desc">Week = dazek, Month = zinva, Day = uira</div>
+    <div class="grid-2 mb-6">
+      <div>
+        <h4 style="font-weight:600;margin-bottom:8px;">Days of the Week</h4>
+        <div id="daysGrid"></div>
+      </div>
+      <div>
+        <h4 style="font-weight:600;margin-bottom:8px;">Months</h4>
+        <div id="monthsGrid"></div>
+      </div>
+    </div>
+    <div class="info-box info-box-amber">
+      &#128161; <strong>Date format:</strong> number + uira (e.g., ik uira = 1st date)<br>
+      <span class="mono">1st Jan, 2026 = ikinva ik uira idtoze-idsif-zok</span>
+    </div>
+  </div>
+
+  <!-- Prepositions -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-badge" style="background:#e0f2fe;color:#0284c7;">10</div>
+      Prepositions
+    </div>
+    <div class="grid-4" id="prepositionsGrid"></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ═══════════════════════════════════════════
+     VOCABULARY
+     ═══════════════════════════════════════════ -->
+<section class="section" id="vocabulary">
+  <div class="section-head">
+    <div class="section-head-row">
+      <div class="section-head-icon">&#128214;</div>
+      <h2 class="section-head-title">Vocabulary</h2>
+    </div>
+    <p class="section-head-sub" id="vocabSubtitle">Complete dictionary — searchable and filterable</p>
+  </div>
+  <div class="search-box">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="vocabSearch" placeholder="Search by Motafi or English..." autocomplete="off">
+  </div>
+  <div class="filter-row" id="typeFilters"></div>
+  <div class="filter-row" id="catFilters" style="margin-bottom:16px;"></div>
+  <div class="vocab-count" id="vocabCount"></div>
+  <div class="grid-3" id="vocabGrid"></div>
+  <div class="empty-state" id="vocabEmpty" style="display:none;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <div style="font-size:1.1rem;">No words found</div>
+    <div class="text-sm">Try different keywords or clear filters.</div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ═══════════════════════════════════════════
+     EXAMPLES
+     ═══════════════════════════════════════════ -->
+<section class="section" id="examples">
+  <div class="section-head">
+    <div class="section-head-row">
+      <div class="section-head-icon">&#9999;</div>
+      <h2 class="section-head-title">Examples</h2>
+    </div>
+    <p class="section-head-sub">Annotated texts — hover over any word to see its meaning</p>
+  </div>
+  <div id="examplesContainer"></div>
+
+  <div class="card">
+    <div class="card-title">More Example Sentences</div>
+    <div class="card-desc">Common sentence patterns in Motafi</div>
+    <div id="quickExamples"></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ═══════════════════════════════════════════
+     SONG
+     ═══════════════════════════════════════════ -->
+<section class="section" id="song">
+  <div class="section-head">
+    <div class="section-head-row">
+      <div class="section-head-icon">&#127925;</div>
+      <h2 class="section-head-title">Vater se vido</h2>
+    </div>
+    <p class="section-head-sub">Water is Life — a song in Motafi with annotated lyrics</p>
+  </div>
+  <div>
+    <div class="song-header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        &#10084;&#65039;
+        <div>
+          <div class="song-header-title">Vater se vido</div>
+          <div class="song-header-sub">Water is Life</div>
+        </div>
+      </div>
+    </div>
+    <div class="song-body">
+      <div class="stanza-grid" id="stanzasGrid"></div>
+      <hr class="separator">
+      <div class="ref-header">&#10024; Word Reference from the Song</div>
+      <div class="word-ref-grid" id="songWordRef"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-logo">
+    <div class="nav-logo-icon" style="width:32px;height:32px;font-size:14px;">M</div>
+    <span style="font-size:1.2rem;font-weight:700;background:linear-gradient(135deg,#d97706,#ea580c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Motafi</span>
+  </div>
+  <p class="footer-desc">
+    <span class="footer-mono">mota</span> (language) + <span class="footer-mono">fi</span> (beautiful) = The Beautiful Language.
+    An elegant constructed language with rich grammar and harmonious sounds.
+  </p>
+  <div class="footer-stats">
+    <span>140+ words</span><span>|</span><span>SVO Syntax</span><span>|</span><span>CV-CV-CV Rhythm</span>
+  </div>
+</footer>
+
+<!-- Scroll to top -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════ -->
+<script>
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+const VOWELS = [
+  { letter: "a", pron: '"a" in "are"' },
+  { letter: "e", pron: '"ay" in "say"' },
+  { letter: "i", pron: '"i" in "ink"' },
+  { letter: "o", pron: '"o" in "coke"' },
+];
+
+const CONSONANTS = "a,b,d,e,f,g,h,i,j,k,l,m,n,o,p,r,s,t,u,v,z".split(",");
+
+const SPECIAL_SOUNDS = [
+  { d: "u", desc: 'Always like "y" in "yoyo", constant sound' },
+  { d: "sh", desc: 'Like "sh" in English' },
+  { d: "th", desc: 'Like "th" in "though"' },
+  { d: "kh", desc: "k and h pronounced separately" },
+  { d: "bh", desc: "b and h pronounced separately" },
+  { d: "ph", desc: 'Pronounced as "f"' },
+  { d: "dh", desc: "English hard d" },
+  { d: "rh", desc: "r and h pronounced separately" },
+  { d: "vh", desc: "v and h pronounced separately" },
+  { d: "zh", desc: "z and h pronounced separately" },
+];
+
+const PHONOLOGY_RULES = [
+  'Soft t like Italian t', 'Soft d like in Chinese',
+  'u always like "y" in "yoyo"',
+  "Two consonants rarely touch; a vowel usually sits between them",
+  "Rhythm favors CV\u2013CV\u2013CV flow",
+];
+
+const PERSONAL_PRONOUNS = [
+  ["mi","I"],["to","you (sg)"],["ni","he/she/it"],["mis","we"],["tos","you all"],["nis","they"],["zi","it"]
+];
+const DEMO_PRONOUNS = [["ji","this"],["jis","these"],["jo","that"],["jos","those"]];
+
+const TENSE = [
+  { p:"(none)", m:"simple present", ex:"mi ke ko = I eat food" },
+  { p:"pe", m:"present (optional)", ex:"mi peke ko = I am eating food" },
+  { p:"la", m:"past", ex:"mi lake ko = I ate food" },
+  { p:"fo", m:"future", ex:"mi foke ko = I will eat food" },
+];
+const NEG_EX = [["pena ke ko","do not eat food"],["lana vise","did not see"],["fona jire","will not rain"]];
+const ASPECTS = [
+  ["(none)","indefinite","jire = rains"],
+  ["-n",'progressive ("-ing")',"jiren = is raining"],
+  ["-nen",'completed ("done")',"jirenen = has rained"],
+];
+const POSSESSION = [["mika to","you mine"],["miska tos","you all ours"]];
+
+const ER_EX = [
+  ["er mi ke ero ko.","I eat the food."],
+  ["ero porauer zebte er jorauer","The student was beaten by the teacher."],
+  ["er porauer zebte ero jorauer","The teacher was beaten by the student (wrong!)."],
+  ["er mi ke","I eat (subject only)"],
+  ["ero mi ke","I am eaten (object only)"],
+  ["foueno badonen er mi.","Work is done by me."],
+];
+
+const INF_EX = [["gese","to be"],["geke","to eat"],["gejire","to rain"],["gevise","to see"]];
+const EVENT_EX = [
+  ["geke ko sire","food eating happens"],
+  ["gejire vater sire","rain-water happening occurs"],
+  ["gevise to sire","seeing you happens"],
+  ["tauer gese sire","bird being happens"],
+];
+const PLURAL_EX = [
+  ["ko-ko","foods (from ko = food)"],
+  ["uofli-uofli","very soft (from uofli = soft)"],
+  ["zisli-zisli","very fast (from zisli = fast)"],
+  ["bleve uofli-uofli kelose","the wind moves very softly"],
+];
+const ARTICLES = [
+  ["za",'singular article ("a")',"za tauer = a bird"],
+  ["po",'plural article ("the" plural)',"po tauer-tauer = the birds"],
+  ["noz",'referential ("the" - discussed before)',"Noz tauer zisli-zisli laken ko."],
+];
+const INTERROGATIVES = [["vas","what"],["vata","when"],["vaua","why"],["vare","where"],["vani","who"],["vage","how"]];
+const Q_EX = [
+  ["\u00BFmi vise to ma?","Do I see you?"],
+  ["\u00BFvaua to labedo?","Why did you do?"],
+  ["\u00BFvata to lavise ni?","When did you see him?"],
+  ["\u00BFvage to kelose?","How do you move?"],
+];
+const CONJUNCTIONS = [["pa","and"],["or","or"],["aua","but"],["baua","because"],["if","if"],["zela","else"],["jen","than"],["afete","then"],["k","so"],["oraka","with"]];
+
+const DIGITS = [["sif","0"],["ik","1"],["id","2"],["ita","3"],["ifa","4"],["ofa","5"],["zok","6"],["soke","7"],["ake","8"],["nake","9"],["ida","10"]];
+const LARGE_NUMS = [["sida","100"],["toze","1,000"],["idatoza","10,000"],["sidatoza","100,000"],["kaho","1,000,000"]];
+const NUM_EX = [[11,"ikisik","ik + sif + ik"],[20,"idsif","id + sif + sif"],[100,"sida",""],[2026,"idtoze-idsif-zok","2-thousand-20-6"]];
+
+const DAYS = [["ikazek","Monday"],["idazek","Tuesday"],["itazek","Wednesday"],["ifazek","Thursday"],["ofazek","Friday"],["zozek","Saturday"],["sozek","Sunday"],["dazek","week",true]];
+const MONTHS = [["ikinva","January"],["idinva","February"],["itinva","March"],["ifinva","April"],["ofanva","May"],["zokenva","June"],["sokenva","July"],["akenva","August"],["nanva","September"],["idanva","October"],["ikanva","November"],["danva","December"],["zinva","month",true]];
+
+const SYNTAX_EX = [
+  ["mi ke ko","I eat food."],["mi lavise to ner","I saw you there."],
+  ["nis jiren vonkli","They are raining darkly."],["bleve uofli kelose mika vater","The wind softly moves our water."],
+];
+
+const SENTENCE_EX = [
+  ["mi ke ko","I eat food."],["mi lavise to ner","I saw you there."],
+  ["gejire sire","Rain happens (eventive)."],["geke ko lasire","Food eating happened."],
+  ["nis jiren vonkli","They are raining darkly."],["gevise ni fosire","Seeing him/her will happen."],
+  ["bleve uofli kelose mika vater","The wind softly moves our water."],["Mi ba ame to","I very love you (intensified)."],
+];
+
+// ─── VOCABULARY DATABASE ───
+const VOCAB = [
+  // Nature
+  ["sen","sun","noun","Nature"],["loona","moon","noun","Nature"],["skoske","sky","noun","Nature"],
+  ["etria","earth","noun","Nature"],["fogo","fire","noun","Nature"],["neve","snow","noun","Nature"],
+  ["sande","sand","noun","Nature"],["blosme","flower","noun","Nature"],["garesa","grass","noun","Nature"],
+  ["arbole","tree","noun","Nature"],["vater","water","noun","Nature"],["blevo","wind","noun","Nature"],
+  ["fise","cloud","noun","Nature"],["mone","storm","noun","Nature"],["poreda","puddle","noun","Nature"],
+  ["zenote","thunder","noun","Nature"],["zenite","lightning","noun","Nature"],
+  ["valora","rain","noun","Nature"],["jirer","rain","noun","Nature"],["vatereza","waterfall","noun","Nature"],
+  ["saga","star","noun","Nature"],["plofe","river","noun","Nature"],["grente","mountain","noun","Nature"],
+  ["arboles","forest","noun","Nature"],["vasera","sea","noun","Nature"],
+  // Animals
+  ["tauer","bird","noun","Animals"],["kane","dog","noun","Animals"],["kate","cat","noun","Animals"],
+  ["envaste","fish","noun","Animals"],["klauer","crow","noun","Animals"],
+  // People
+  ["homi","man / person","noun","People"],["honima","woman","noun","People"],["infre","child","noun","People"],
+  ["matre","mother","noun","People"],["patre","father","noun","People"],["amike","friend","noun","People"],
+  ["jorauer","teacher","noun","People"],["porauer","student / learner","noun","People"],
+  ["zagaka","everyone","quantifier","People"],
+  // Body
+  ["serga","head","noun","Body"],["hake","hand","noun","Body"],["pedre","foot","noun","Body"],
+  ["pike","eye","noun","Body"],["ore","ear","noun","Body"],["sentra","heart","noun","Body"],
+  // Objects
+  ["kasa","house","noun","Objects"],["dera","door","noun","Objects"],["kade","chair","noun","Objects"],
+  ["benka","table","noun","Objects"],["kame","bed","noun","Objects"],["sodera","book","noun","Objects"],
+  ["tele","phone / screen","noun","Objects"],["ija","pen","noun","Objects"],["vesto","clothes","noun","Objects"],
+  ["dome","building","noun","Objects"],["koopla","pot","noun","Objects"],["gonte","bridge","noun","Objects"],
+  // Places
+  ["urba","city","noun","Places"],["dehega","village","noun","Places"],["gova","country","noun","Places"],
+  ["monde","world","noun","Places"],
+  // Food
+  ["ko","food","noun","Food"],["roteni","bread","noun","Food"],["vategova","fruit","noun","Food"],
+  ["lakte","milk","noun","Food"],["ovo","egg","noun","Food"],
+  // Abstract
+  ["teno","time","noun","Abstract"],["uira","day","noun","Abstract"],["nira","night","noun","Abstract"],
+  ["anva","year","noun","Abstract"],["noma","name","noun","Abstract"],["rakonte","story","noun","Abstract"],
+  ["kanta","song","noun","Abstract"],["mota","language","noun","Abstract"],["vido","life","noun","Abstract"],
+  ["zologo","knowledge","noun","Abstract"],["foueno","work","noun","Abstract"],
+  ["gaua","reason","noun","Abstract"],["sonja","dream","noun","Abstract"],["spaset","memory","noun","Abstract"],
+  ["jer","here","noun","Location"],["ner","there","noun","Location"],
+  // ─── VERBS ───
+  ["se","to be","verb","Basic Verbs"],["ke","to eat","verb","Basic Verbs"],["vise","to see","verb","Basic Verbs"],
+  ["jire","to rain","verb","Nature Verbs"],["zigese","to flash lightning","verb","Nature Verbs"],
+  ["fisne","to cloud over","verb","Nature Verbs"],["sire","to happen","verb","Basic Verbs"],
+  ["poreke","to form puddles","verb","Nature Verbs"],["bleve","to blow (wind)","verb","Nature Verbs"],
+  ["kelose","to move","verb","Movement"],["ane","to breathe","verb","Basic Verbs"],
+  ["bado","to do","verb","Basic Verbs"],["ame","to love","verb","Emotion"],
+  ["dane","to give","verb","Action"],["tome","to take","verb","Action"],
+  ["vade","to go","verb","Movement"],["vene","to come","verb","Movement"],
+  ["fouene","to work","verb","Action"],["dorme","to sleep","verb","Action"],
+  ["sibe","to write","verb","Communication"],["lire","to read","verb","Communication"],
+  ["mosite","to say / speak","verb","Communication"],["koore","to run","verb","Movement"],
+  ["salte","to jump","verb","Movement"],["pense","to think","verb","Mental"],
+  ["sente","to feel","verb","Emotion"],["vide","to live","verb","Basic Verbs"],
+  ["zebte","to beat","verb","Action"],["joraue","to teach","verb","Communication"],
+  ["poraue","to learn","verb","Mental"],["more","to die","verb","Basic Verbs"],
+  ["zoloje","to know","verb","Mental"],["marse","to walk","verb","Movement"],
+  ["trinke","to drink","verb","Action"],["eme","to buy","verb","Action"],
+  ["vende","to sell","verb","Action"],["solese","to open","verb","Action"],
+  ["nasole","to close","verb","Action"],["labe","to find","verb","Action"],
+  ["perde","to lose","verb","Action"],["atende","to wait","verb","Action"],
+  ["uekre","to ask","verb","Communication"],["vekre","to answer","verb","Communication"],
+  ["pokre","to help","verb","Action"],["tamere","to build","verb","Action"],
+  ["rompe","to break","verb","Action"],["klanse","to clean","verb","Action"],
+  ["lasepe","to wash","verb","Action"],["doke","to cook","verb","Action"],
+  ["mosike","to sing","verb","Communication"],["mevoke","to dance","verb","Movement"],
+  ["nate","to swim","verb","Movement"],["bove","to fly","verb","Movement"],
+  ["jige","to make","verb","Action"],["jireza","to fall","verb","Movement"],
+  ["frote","to become strong","verb","State"],["be","to become","verb","State"],
+  // ─── ADJ/ADV ───
+  ["uofli","soft / softly","adj/adv","Texture"],["rodli","hard / harshly","adj/adv","Texture"],
+  ["zisli","fast / quickly","adj/adv","Speed"],["lisli","slow / slowly","adj/adv","Speed"],
+  ["vonkli","dark","adj/adv","Light"],["zenli","bright","adj/adv","Light"],
+  ["ikli","alone","adj/adv","Quantity"],["mikli","crowded / dense","adj/adv","Quantity"],
+  ["hervali","hot / warm","adj/adv","Temperature"],["geli","cold / freezing","adj/adv","Temperature"],
+  ["vateli","wet / humid","adj/adv","Texture"],["viveli","alive / lively","adj/adv","State"],
+  ["morteli","dead / deadly","adj/adv","State"],["boneli","good / well","adj/adv","Quality"],
+  ["malali","bad / badly","adj/adv","Quality"],["fi","beautiful","adj/adv","Quality"],
+  ["granli","big / large","adj/adv","Size"],["pikoli","small / little","adj/adv","Size"],
+  ["zapeli","happy","adj/adv","Emotion"],["tristeli","sad","adj/adv","Emotion"],
+  ["noveli","new","adj/adv","Time"],["vesli","old (aged)","adj/adv","Time"],
+  ["forteli","strong","adj/adv","Physical"],["debili","weak","adj/adv","Physical"],
+  ["saneli","healthy","adj/adv","Physical"],["libreli","free","adj/adv","Abstract"],
+  ["okuoli","only","adj/adv","Quantity"],["vidi","living","adj/adv","State"],
+  ["depi","deep","adj/adv","Dimension"],["nadepi","shallow","adj/adv","Dimension"],
+  ["pli","full","adj/adv","Quantity"],["napli","empty","adj/adv","Quantity"],
+  ["klansi","clean","adj/adv","State"],["nasi","dirty","adj/adv","State"],
+  ["seki","dry","adj/adv","Texture"],["foski","fresh","adj/adv","Quality"],
+  ["dolsi","sweet","adj/adv","Taste"],["asi","sour","adj/adv","Taste"],
+  ["amarli","bitter","adj/adv","Taste"],["saleli","salty","adj/adv","Taste"],
+  ["pikatli","spicy","adj/adv","Taste"],["pesili","heavy","adj/adv","Physical"],
+  ["lejeri","light (weight)","adj/adv","Physical"],["rondli","round","adj/adv","Shape"],
+  ["platli","flat","adj/adv","Shape"],["glatli","smooth","adj/adv","Texture"],
+  ["raspli","rough","adj/adv","Texture"],["akotli","sharp","adj/adv","Texture"],
+  ["malakotli","blunt","adj/adv","Texture"],["dokli","thick","adj/adv","Dimension"],
+  ["tenooli","thin","adj/adv","Dimension"],["vadali","wide","adj/adv","Dimension"],
+  ["stretli","narrow","adj/adv","Dimension"],["altli","high","adj/adv","Dimension"],
+  ["basli","low","adj/adv","Dimension"],["distli","far","adj/adv","Distance"],
+  ["prokesli","near","adj/adv","Distance"],["jonli","young","adj/adv","Age"],
+  ["antikli","ancient","adj/adv","Age"],["rikli","rich","adj/adv","Social"],
+  ["poveri","poor","adj/adv","Social"],["silentli","quiet","adj/adv","Sound"],
+  ["broli","loud","adj/adv","Sound"],["sekorli","safe","adj/adv","Abstract"],
+  ["gangeri","dangerous","adj/adv","Abstract"],["simpli","simple","adj/adv","Abstract"],
+  ["kompleksi","complex","adj/adv","Abstract"],["otuerli","open","adj/adv","State"],
+  ["natuerli","closed","adj/adv","State"],["kesli","correct","adj/adv","Quality"],
+  ["ronagli","wrong","adj/adv","Quality"],["verli","true","adj/adv","Quality"],
+  ["naverli","false","adj/adv","Quality"],["pretli","ready","adj/adv","State"],
+  ["fatikli","tired","adj/adv","State"],["songli","hungry","adj/adv","State"],
+  ["sifli","thirsty","adj/adv","State"],["radeli","very","adj/adv","Degree"],
+  // ─── PREPOSITIONS ───
+  ["a","at","preposition","Prepositions"],["taro","to (prep.)","preposition","Prepositions"],
+  ["de","from","preposition","Prepositions"],["en","in / on","preposition","Prepositions"],
+  ["kon","with","preposition","Prepositions"],["nakon","without","preposition","Prepositions"],
+  ["sobre","over / above","preposition","Prepositions"],["sobe","under / below","preposition","Prepositions"],
+  // ─── PARTICLES ───
+  ["ba","verb intensification","particle","Particles"],["ue","too / also","particle","Particles"],
+  ["ge-","infinitive prefix","particle","Particles"],["er","subject marker","particle","Particles"],
+  ["ero","object marker","particle","Particles"],["ka","possession particle","particle","Particles"],
+  ["ma","question marker","particle","Particles"],
+];
+
+// Build lookup map
+const vocabMap = {};
+VOCAB.forEach(v => { vocabMap[v[0].toLowerCase().replace(/[^a-z]/g,"")] = v; });
+
+const TYPE_LABELS = {"noun":"Noun","verb":"Verb","adj/adv":"Adj/Adv","preposition":"Prep.","particle":"Particle","pronoun":"Pron.","conjunction":"Conj.","quantifier":"Quant.","article":"Article","interrogative":"Interrog."};
+const TYPE_BADGE = {"noun":"badge-noun","verb":"badge-verb","adj/adv":"badge-adj","preposition":"badge-prep","particle":"badge-particle","pronoun":"badge-pronoun","conjunction":"badge-conj"};
+
+// ─── EXAMPLE TEXTS ───
+const EXAMPLE_TEXTS = [
+  {
+    title: "The Thirsty Crow",
+    motafi: "Ik klauer laboven en skoske. Ni lase radeli sifli. Ni lavise za pli vater koopla. Ni labe radeli zapeli. Ni latrinke pa labove.",
+    english: "A crow was flying in the sky. He was very thirsty. He saw a full water pot. He became very happy. He drank and flew.",
+    words: [
+      ["Ik","a / one","number/article"],["klauer","crow","noun"],["laboven","was flying","la+bove+-n"],
+      ["en","in","preposition"],["skoske","sky","noun"],["Ni","he","pronoun"],
+      ["lase","was","la+se"],["radeli","very","adverb"],["sifli","thirsty","adjective"],
+      ["Ni","he","pronoun"],["lavise","saw","la+vise"],["za","a","article"],
+      ["pli","full","adjective"],["vater","water","noun"],["koopla","pot","noun"],
+      ["Ni","he","pronoun"],["labe","became","la+be"],["radeli","very","adverb"],
+      ["zapeli","happy","adjective"],["Ni","he","pronoun"],["latrinke","drank","la+trinke"],
+      ["pa","and","conjunction"],["labove","flew","la+bove"],
+    ]
+  },
+  {
+    title: "Wind and Thunder",
+    motafi: "Za blevo uofli bleve, aua za zenote broli sire.",
+    english: "The wind blows softly, but the thunder is loud.",
+    words: [
+      ["Za","the/a","article"],["blevo","wind","noun"],["uofli","softly","adverb"],
+      ["bleve","blows","verb"],["aua","but","conjunction"],["za","the/a","article"],
+      ["zenote","thunder","noun"],["broli","loud","adjective"],["sire","happens","verb"],
+    ]
+  },
+  {
+    title: "The Bird and the Food (Articles)",
+    motafi: "Za tauer laken ko. Noz tauer zisli-zisli laken ko. Baua ni lazolojenen jot if ni lisli ken, po zakera tauer fovene pa ke nika ko.",
+    english: "A bird was eating food. The bird was quickly eating food. Because he had known that if eat slowly, the other birds will come and eat his food.",
+    words: [
+      ["Za","a","article (introducing)"],["tauer","bird","noun"],["laken","was eating","la+ke+-n"],
+      ["ko","food","noun"],["Noz","the","referential article"],["tauer","bird","noun"],
+      ["zisli-zisli","very fast","intensified adv."],["laken","was eating","la+ke+-n"],["ko","food","noun"],
+      ["Baua","because","conjunction"],["ni","he","pronoun"],["lazolojenen","had known","la+zoloje+-nen"],
+      ["jot","that","conjunction"],["if","if","conjunction"],["ni","he","pronoun"],
+      ["lisli","slowly","adverb"],["ken","eats","ke+-n"],["po","the","plural article"],
+      ["zakera","other","adjective"],["tauer","birds","noun"],["fovene","will come","fo+vene"],
+      ["pa","and","conjunction"],["ke","eat","verb"],["nika","his","ka possession"],["ko","food","noun"],
+    ]
+  }
+];
+
+// ─── SONG ───
+const SONG_STANZAS = [
+  { m: "Vater se gaua, mi vide,\nVater se gaua, to vide,\nMi, to ba ame ji vater\nVater se jer, vido se jer,",
+    e: "Water is the reason I live,\nWater is the reason you live,\nI, you love (intensified) this water,\nWater is here, life is here," },
+  { m: "Vata gejire sire,\nArbole ka vide frote,\nBlosme kelose zapeli.\nGaresa be vidi zapeli.",
+    e: "When rain happens,\nTree's life strengthens,\nFlower moves (dances) happily,\nGrass becomes living, happily." },
+  { m: "Tauer pevene pa trinke,\nHomi pevene pa trinke.\nZagake vene pa trinke,\nbaua ji Vater jige vido.",
+    e: "Bird comes and drinks,\nMan comes and drinks,\nEveryone comes and drinks,\nBecause this water makes living." },
+];
+const SONG_WORDS = [
+  ["Vater","water","noun"],["se","is","verb"],["gaua","reason","noun"],["mi","I","pronoun"],
+  ["vide","live","verb"],["to","you","pronoun"],["ba","intensifier","particle"],["ame","love","verb"],
+  ["ji","this","demonstrative"],["jer","here","noun"],["vido","life","noun"],
+  ["Vata","when","interrogative/conj."],["gejire","to rain","ge- + jire"],["sire","happens","verb"],
+  ["Arbole","tree","noun"],["ka","possessive","particle"],["frote","strengthens","verb"],
+  ["Blosme","flower","noun"],["kelose","moves (dances)","verb"],["zapeli","happily","adj/adv"],
+  ["Garesa","grass","noun"],["be","becomes","verb"],["vidi","living","adj/adv"],
+  ["Tauer","bird","noun"],["pevene","comes","pe+vene"],["pa","and","conjunction"],["trinke","drinks","verb"],
+  ["Homi","man","noun"],["Zagake","everyone","quantifier"],["vene","comes","verb"],
+  ["baua","because","conjunction"],["jige","makes","verb"],
+];
+
+// ═══════════════════════════════════════════
+// RENDER FUNCTIONS
+// ═══════════════════════════════════════════
+
+function badgeHTML(type) {
+  const cls = TYPE_BADGE[type] || "badge-default";
+  return `<span class="badge ${cls}">${TYPE_LABELS[type]||type}</span>`;
+}
+
+function makeWordHover(word, translation, grammar) {
+  return `<span class="word-hover">${word}<span class="word-tip"><strong>${translation}</strong><br><span style="opacity:0.7;font-size:0.75rem">${grammar}</span></span></span>`;
+}
+
+function makeMiniItem(mota, eng) {
+  return `<div class="mini-item"><div class="mini-label">${mota}</div><div class="mini-val">${eng}</div></div>`;
+}
+
+function makeExPair(m, e) {
+  return `<div style="padding:10px 14px;border-radius:10px;border:1px solid #e5e5e5;"><div class="mono fw-bold" style="font-size:0.9rem;">${m}</div><div class="text-sm text-muted">${e}</div></div>`;
+}
+
+function makeExampleItem(m, e, i) {
+  return `<div class="example-item"><div class="example-dot"></div><div><div class="example-mota">${m}</div><div class="example-eng">${e}</div></div></div>`;
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+document.addEventListener("DOMContentLoaded", () => {
+
+  // Verb count
+  document.getElementById("verbCount").textContent = VOCAB.filter(v=>v[2]==="verb").length + "+";
+
+  // Phonology
+  document.getElementById("vowelGrid").innerHTML = VOWELS.map(v =>
+    `<div class="vowel-card"><div class="vowel-letter">${v.letter}</div><div class="vowel-pron">${v.pron}</div></div>`
+  ).join("");
+  document.getElementById("consonantGrid").innerHTML = CONSONANTS.map(c =>
+    `<div class="consonant-chip">${c}</div>`
+  ).join("");
+  document.getElementById("specialSoundsGrid").innerHTML = SPECIAL_SOUNDS.map(s =>
+    `<div class="special-sound"><div class="special-digraph">${s.d}</div><div class="special-desc">${s.desc}</div></div>`
+  ).join("");
+  document.getElementById("phonologyRules").innerHTML = PHONOLOGY_RULES.map(r =>
+    `<div class="rule-item"><span class="rule-arrow">&#8250;</span><span>${r}</span></div>`
+  ).join("");
+
+  // Grammar
+  document.getElementById("syntaxExamples").innerHTML = SYNTAX_EX.map(e => makeExPair(e[0],e[1])).join("");
+  document.getElementById("personalPronouns").innerHTML = PERSONAL_PRONOUNS.map(p =>
+    `<div style="display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;border:1px solid #e5e5e5;background:#f0fdfa;">
+      <span class="mono fw-bold" style="color:#0d9488;">${p[0]}</span><span class="text-sm text-muted">${p[1]}</span></div>`
+  ).join("");
+  document.getElementById("demoPronouns").innerHTML = DEMO_PRONOUNS.map(p =>
+    `<div style="display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;border:1px solid #e5e5e5;background:#f0fdfa;">
+      <span class="mono fw-bold" style="color:#0d9488;">${p[0]}</span><span class="text-sm text-muted">${p[1]}</span></div>`
+  ).join("");
+  document.getElementById("tenseGrid").innerHTML = TENSE.map(t =>
+    `<div style="padding:12px;border-radius:10px;border:1px solid #e5e5e5;">
+      <span class="badge badge-default mono" style="margin-bottom:6px;">${t.p}</span>
+      <div class="text-sm fw-bold">${t.m}</div>
+      <div class="text-xs text-muted mono" style="margin-top:4px;">${t.ex}</div></div>`
+  ).join("");
+  document.getElementById("negationGrid").innerHTML = NEG_EX.map(e => makeExPair(e[0],e[1])).join("");
+  document.getElementById("aspectGrid").innerHTML = ASPECTS.map(a =>
+    `<div style="padding:10px 14px;border-radius:10px;border:1px solid #e5e5e5;margin-bottom:6px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <span class="badge badge-default mono">${a[0]}</span><span class="text-sm fw-bold">${a[1]}</span></div>
+      <div class="text-xs text-muted mono">${a[2]}</div></div>`
+  ).join("");
+  document.getElementById("possessionGrid").innerHTML = POSSESSION.map(e => makeExPair(e[0],e[1])).join("");
+  document.getElementById("activePassiveGrid").innerHTML = ER_EX.map(e => makeExPair(e[0],e[1])).join("");
+  document.getElementById("infinitiveGrid").innerHTML = INF_EX.map(e =>
+    `<div class="mini-item" style="border:1px solid #c7d2fe;background:#eef2ff;">
+      <div class="mini-label" style="color:#4338ca;">${e[0]}</div><div class="mini-val">${e[1]}</div></div>`
+  ).join("");
+  document.getElementById("eventGrid").innerHTML = EVENT_EX.map(e => makeExPair(e[0],e[1])).join("");
+  document.getElementById("pluralGrid").innerHTML = PLURAL_EX.map(e => makeExPair(e[0],e[1])).join("");
+  document.getElementById("articlesGrid").innerHTML = ARTICLES.map(a =>
+    `<div style="padding:14px 18px;border-radius:10px;border:1px solid #e5e5e5;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <span class="badge badge-default mono" style="background:#fce7f3;color:#be185d;">${a[0]}</span>
+        <span class="text-sm fw-bold">${a[1]}</span></div>
+      <div class="text-xs text-muted mono">${a[2]}</div></div>`
+  ).join("");
+  document.getElementById("interrogativesRow").innerHTML = INTERROGATIVES.map(q =>
+    `<span class="badge badge-default mono" style="padding:4px 12px;font-size:0.82rem;">
+      <strong style="color:#0e7490;">${q[0]}</strong> <span style="color:#737373;">= ${q[1]}</span></span>`
+  ).join("");
+  document.getElementById("questionExamples").innerHTML = Q_EX.map(e => makeExPair(e[0],e[1])).join("");
+  document.getElementById("conjunctionsGrid").innerHTML = CONJUNCTIONS.map(c => makeMiniItem(c[0],c[1])).join("");
+  document.getElementById("digitsGrid").innerHTML = DIGITS.map(d =>
+    `<div class="mini-item"><div class="text-xs text-muted">${d[1]}</div><div class="mini-label" style="color:#4338ca;">${d[0]}</div></div>`
+  ).join("");
+  document.getElementById("largeNumsRow").innerHTML = LARGE_NUMS.map(n =>
+    `<span class="badge badge-default mono" style="padding:4px 12px;"><strong style="color:#4338ca;">${n[0]}</strong> <span style="color:#737373;">= ${n[1]}</span></span>`
+  ).join("");
+  document.getElementById("numExamples").innerHTML = NUM_EX.map(n =>
+    `<div class="mini-item" style="text-align:center;padding:14px;">
+      <div style="font-size:1.5rem;font-weight:700;color:#4338ca;">${n[0]}</div>
+      <div class="mono fw-bold">${n[1]}</div>
+      ${n[2]?`<div class="text-xs text-muted" style="margin-top:4px;">${n[2]}</div>`:''}</div>`
+  ).join("");
+
+  // Days
+  document.getElementById("daysGrid").innerHTML = DAYS.map(d =>
+    `<div class="day-row ${d[2]?'base':''}"><span class="day-mota" ${d[2]?'style="color:#16a34a;"':''}>${d[0]}</span><span class="day-eng">${d[1]}</span></div>`
+  ).join("");
+  document.getElementById("monthsGrid").innerHTML = MONTHS.map(m =>
+    `<div class="day-row ${m[2]?'base':''}"><span class="day-mota" ${m[2]?'style="color:#16a34a;"':''}>${m[0]}</span><span class="day-eng">${m[1]}</span></div>`
+  ).join("");
+
+  // Prepositions
+  const preps = VOCAB.filter(v=>v[2]==="preposition");
+  document.getElementById("prepositionsGrid").innerHTML = preps.map(p =>
+    `<div class="mini-item" style="border:1px solid #bae6fd;background:#f0f9ff;">
+      <div class="mini-label" style="color:#0284c7;">${p[0]}</div><div class="mini-val">${p[1]}</div></div>`
+  ).join("");
+
+  // ─── VOCABULARY (searchable) ───
+  const types = [...new Set(VOCAB.map(v=>v[2]))].sort();
+  const cats = [...new Set(VOCAB.map(v=>v[3]).filter(Boolean))].sort();
+
+  document.getElementById("typeFilters").innerHTML =
+    `<button class="filter-btn active" onclick="filterVocab('type','all',this)">All (${VOCAB.length})</button>` +
+    types.map(t => `<button class="filter-btn" onclick="filterVocab('type','${t}',this)">${TYPE_LABELS[t]||t} (${VOCAB.filter(v=>v[2]===t).length})</button>`).join("");
+  document.getElementById("catFilters").innerHTML =
+    `<button class="filter-btn active" onclick="filterVocab('cat','all',this)" style="font-size:0.72rem;">All Categories</button>` +
+    cats.map(c => `<button class="filter-btn" onclick="filterVocab('cat','${c}',this)" style="font-size:0.72rem;">${c}</button>`).join("");
+
+  let selectedType = "all", selectedCat = "all";
+  window.filterVocab = function(kind, val, btn) {
+    if (kind === "type") selectedType = val;
+    else selectedCat = val;
+    const parent = btn.parentElement;
+    parent.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderVocab();
+  };
+
+  function renderVocab() {
+    const q = document.getElementById("vocabSearch").value.toLowerCase();
+    const filtered = VOCAB.filter(v => {
+      const matchQ = !q || v[0].toLowerCase().includes(q) || v[1].toLowerCase().includes(q);
+      const matchT = selectedType === "all" || v[2] === selectedType;
+      const matchC = selectedCat === "all" || v[3] === selectedCat;
+      return matchQ && matchT && matchC;
+    });
+    document.getElementById("vocabCount").textContent = `Showing ${filtered.length} of ${VOCAB.length} words`;
+    document.getElementById("vocabEmpty").style.display = filtered.length ? "none" : "block";
+    document.getElementById("vocabGrid").innerHTML = filtered.map((v,i) =>
+      `<div class="vocab-item">
+        <div style="min-width:0;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span class="vocab-word">${v[0]}</span>
+            ${badgeHTML(v[2])}
+          </div>
+          <div class="vocab-eng">${v[1]}</div>
+          <div class="vocab-cat">${v[3]||""}</div>
+        </div>
+        <button class="copy-btn" onclick="copyText('${v[0]}',this)" title="Copy">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        </button>
+      </div>`
+    ).join("");
+  }
+  document.getElementById("vocabSearch").addEventListener("input", renderVocab);
+  renderVocab();
+
+  // ─── EXAMPLE TEXTS ───
+  document.getElementById("examplesContainer").innerHTML = EXAMPLE_TEXTS.map((text, ti) => {
+    const annotatedHTML = text.words.map(w => makeWordHover(w[0], w[1], w[2])).join(" ");
+    const breakdownHTML = text.words.map(w =>
+      `<div class="word-ref-row">
+        <span class="word-ref-mota">${w[0]}</span>
+        <span class="word-ref-arrow">&#8250;</span>
+        <span class="word-ref-eng">${w[1]}</span>
+      </div>`
+    ).join("");
+    return `<div class="card" style="overflow:hidden;">
+      <div style="background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;padding:18px 24px;border-radius:16px 16px 0 0;">
+        <div style="font-size:1.15rem;font-weight:700;">${text.title}</div>
+      </div>
+      <div style="padding:24px;">
+        <div class="text-xs fw-bold text-muted" style="text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Motafi — hover words for meanings</div>
+        <div style="padding:16px;border-radius:12px;background:#fffbeb;border:1px solid #fde68a;">
+          <div class="annotated-text">${annotatedHTML}</div>
+        </div>
+        <div class="text-xs fw-bold text-muted" style="text-transform:uppercase;letter-spacing:0.5px;margin:16px 0 10px;">English Translation</div>
+        <div style="padding:16px;border-radius:12px;background:#fafafa;border:1px solid #e5e5e5;">
+          <div class="text-muted" style="font-style:italic;line-height:1.7;">${text.english}</div>
+        </div>
+        <div class="text-xs fw-bold text-muted" style="text-transform:uppercase;letter-spacing:0.5px;margin:16px 0 10px;">Word-by-Word Breakdown</div>
+        <div class="word-ref-grid"><div class="grid-3" style="gap:4px;">${breakdownHTML}</div></div>
+      </div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("quickExamples").innerHTML = SENTENCE_EX.map((e,i) => makeExampleItem(e[0],e[1],i)).join("");
+
+  // ─── SONG ───
+  document.getElementById("stanzasGrid").innerHTML = SONG_STANZAS.map(s =>
+    `<div><div class="stanza-box">${s.m}</div><div class="stanza-eng">${s.e}</div></div>`
+  ).join("");
+  document.getElementById("songWordRef").innerHTML = SONG_WORDS.map(w =>
+    `<div class="word-ref-row">
+      <span class="word-ref-mota">${w[0]}</span>
+      <span class="word-ref-arrow">&#8250;</span>
+      <span class="word-ref-eng">${w[1]}</span>
+      <span class="word-ref-grammar">${w[2]}</span>
+    </div>`
+  ).join("");
+
+  // ─── NAVIGATION ───
+  // Mobile menu toggle
+  const hamburger = document.getElementById("hamburgerBtn");
+  const mobileNav = document.getElementById("mobileNav");
+  hamburger.addEventListener("click", () => { mobileNav.classList.toggle("open"); });
+
+  // Section tracking
+  const sections = ["home","phonology","grammar","vocabulary","examples","song"];
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        setActiveNav(id);
+      }
+    });
+  }, { rootMargin: "-40% 0px -40% 0px" });
+  sections.forEach(id => { const el = document.getElementById(id); if(el) observer.observe(el); });
+
+  function setActiveNav(id) {
+    document.querySelectorAll(".nav-link").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.section === id);
+    });
+    document.querySelectorAll("#mobileNav button").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.section === id);
+    });
+  }
+
+  // Scroll to top
+  const scrollBtn = document.getElementById("scrollTop");
+  window.addEventListener("scroll", () => {
+    scrollBtn.classList.toggle("visible", window.scrollY > 500);
+  });
+});
+
+function scrollTo_(id) {
+  document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+  document.getElementById("mobileNav").classList.remove("open");
+}
+
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text);
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+  setTimeout(() => {
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+  }, 1500);
+}
+</script>
+</body>
+</html>
